@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {useHistory,Link} from 'react-router-dom'
 import Header from './Header'
-
+import axios from 'axios';
 function Login() {
 
     
@@ -11,9 +11,17 @@ function Login() {
     const [userErr,setuserErr]=useState(false);
     const [passErr,setpassErr]=useState(false);
 
+
+    useEffect(() => {
+        if(localStorage.getItem('User-info')){
+         history.push("/addproduct")
+        }
+      }, []);
     
     function emailhandler(event)
     {
+
+        
         let item=event.target.value
         
         if(item.length=='')
@@ -40,19 +48,35 @@ function Login() {
         }
         setpassword(item)
     }
-    const datahandler=(event)=>
+    const datahandler=()=>
     {
+
+        
+        const newdata={
+            email: email,
+            password: password
+     
+         } 
         if(email=="" || password.length<8)
         {
             alert("Please fill yor correct data")
         }
         else{
-            history.push("/addproduct")
+           // axios.post("/frontendsignin",newdata)
+           //   OR
+           fetch("/frontendsignin", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(newdata),
+        });
+  
+       localStorage.setItem('User-info',JSON.stringify(newdata))
         }
-     let item={email,password}
-     console.warn(item)
-    event.preventDefault();
-   
+     
+    // event.preventDefault();
     //  alert(
     //      `Name: ${username}. Email: ${email}`);
     
@@ -62,12 +86,13 @@ function Login() {
         <div>
         
         <Header/>
+        <div className="container mt-5 Addproductbody " style={{height:'420px',margin:'auto',width: '50%',boxShadow:'rgba(0, 0, 0, 0.24) 0px 3px 8px'}}>
         <div className="my-5">
         <h1 className="text-center">User Sign IN</h1>   
         </div>   
-        <div className="container contact_div">
+        <div className="container  contact_div">
         <div className="row">
-        <div className="col-md-6 col-10 mx-auto">
+        <div className="col-md-10 col-10 mx-auto">
         <form >
        
         <div className="mb-3">
@@ -99,22 +124,21 @@ function Login() {
         </div> */}
         <div className="col-sm-1">
         <button type="submit" 
-                className="btn btn-outline-secondary" onClick={datahandler} >Submit</button>
+                className="btn btn-outline-secondary " onClick={datahandler} >Submit</button>
         </div>
         </form>
         </div>
         </div>
         </div>
-        <div className="container">
+        <div className="container ">
         <div className="row justify-content-end">
-        <div class="col-8">
-        <Link className="navbar-brand"  exact to="/register"><h6 className="text-secondary">Create an account</h6></Link>
-        </div>
+        <div className="col-md-5">
+       <Link className="navbar-brand" exact to="/register"><h6 className="text-secondary">Create an account</h6></Link>
         </div>
         </div>
         
-
-      
+        </div>  
+        </div>  
 </div>
     )
 }

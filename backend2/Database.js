@@ -17,5 +17,7 @@ const signup = new mongoose.Schema({
   
 });
 
-const FrontendData = mongoose.model("FrontendData",signup);
-module.exports = FrontendData;
+const Signup = mongoose.model("Signup",signup);
+
+
+module.exports = Signup;
